@@ -16,7 +16,7 @@
                     <button>Voir menu</button>
                 </a>
 
-                {% if restaurant.user == app.user %}
+                {% if app.user is not null and restaurant.restaurateur == app.user %}
                     <a href="{{ path('restaurant_manage', {'id': restaurant.id}) }}">
                         <button>Gérer le restaurant</button>
                     </a>
