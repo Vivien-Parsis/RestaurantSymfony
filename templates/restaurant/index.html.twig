@@ -24,4 +24,10 @@
             </li>
         {% endfor %}
     </ul>
+
+    {% if app.user and app.user.restaurant is null %}
+        <a href="{{ path('restaurant_create') }}">
+            <button>Créer un restaurant</button>
+        </a>
+    {% endif %}
 {% endblock %}
