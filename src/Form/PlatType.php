@@ -18,19 +18,16 @@ class PlatType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'label' => 'Plat Name',
+                'label' => 'Nom',
             ])
             ->add('ingredients', TextType::class, [
                 'label' => 'Ingredients',
             ])
             ->add('prix', NumberType::class, [
-                'label' => 'Price',
+                'label' => 'Prix',
             ])
             ->add('categorie', TextType::class, [
-                'label' => 'Category',
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'Add Plat',
+                'label' => 'Categorie',
             ]);
     }
 

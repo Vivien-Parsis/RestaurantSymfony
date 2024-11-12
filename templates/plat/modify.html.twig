@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Plat - {{ plat.nom }}{% endblock %}
+
+{% block body %}
+    <h1>Modifier le plat {{ plat.nom }}</h1>
+
+    {{ form_start(platForm) }}
+        {{ form_row(platForm.nom) }}
+        {{ form_row(platForm.ingredients) }}
+        {{ form_row(platForm.prix) }}
+        {{ form_row(platForm.categorie) }}
+        <button type="submit">Enregistrer les modifications</button>
+    {{ form_end(platForm) }}
+
+    <br>
+    <a href="{{ path('restaurant_manage_menus', {'id': restaurant.id}) }}">Retour à la gestion des menus</a>
+{% endblock %}

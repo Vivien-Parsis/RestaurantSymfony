@@ -65,8 +65,7 @@ class RestaurantController extends AbstractController
         $form = $this->createForm(RestaurantType::class, $restaurant);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            //$user = $this->getUser();
-            $user = null;
+            $user = $this->getUser();
             $restaurant->setRestaurateur($user);
             $this->entityManager->persist($restaurant);
             $this->entityManager->flush();
@@ -90,52 +89,111 @@ class RestaurantController extends AbstractController
             'restaurant' => $restaurant,
         ]);
     }
-
-    #[Route('/restaurant/{id}/manage/menus', name: 'restaurant_manage_menus')]
+    #[Route('/{id}/manage/menus', name: 'restaurant_manage_menus')]
     public function manageMenus(int $id, Request $request): Response | RedirectResponse
     {
         $restaurant = $this->restaurantRepository->find($id);
-
+    
         if ($restaurant === null) {
             throw $this->createNotFoundException('Restaurant not found');
         }
         if ($restaurant->getRestaurateur() !== $this->getUser()) {
             return $this->redirectToRoute('restaurant_list');
         }
+    
+        // Handle Menu creation
         $menu = new Menu();
         $menuForm = $this->createForm(MenuType::class, $menu);
         $menuForm->handleRequest($request);
-
+    
         if ($menuForm->isSubmitted() && $menuForm->isValid()) {
             $menu->setRestaurant($restaurant);
             $this->entityManager->persist($menu);
             $this->entityManager->flush();
-
+    
             return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurant->getId()]);
         }
-        $plat = new Plat();
-        $platForm = $this->createForm(PlatType::class, $plat);
-        $platForm->handleRequest($request);
-
-        if ($platForm->isSubmitted() && $platForm->isValid()) {
-            $menuId = $request->request->get('menu_id');
-            $menu = $this->menuRepository->find($menuId);
-
-            if ($menu) {
+    
+        // Handle Plat forms for each menu
+        $menus = $this->menuRepository->findBy(['restaurant' => $restaurant]);
+        $platForms = [];
+    
+        foreach ($menus as $menu) {
+            $plat = new Plat();
+            $platForm = $this->createForm(PlatType::class, $plat);
+            $platForm->handleRequest($request);
+            $platForms[$menu->getId()] = $platForm->createView();
+    
+            if ($platForm->isSubmitted() && $platForm->isValid() && $request->request->get('menu_id') == $menu->getId()) {
                 $plat->addMenu($menu);
                 $this->entityManager->persist($plat);
                 $this->entityManager->flush();
-
+    
                 return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurant->getId()]);
             }
         }
-
-        $menus = $this->menuRepository->findBy(['restaurant' => $restaurant]);
-
+    
         return $this->render('restaurant/manage_menus.html.twig', [
             'restaurant' => $restaurant,
             'menus' => $menus,
             'menuForm' => $menuForm->createView(),
+            'platForms' => $platForms,
+        ]);
+    }
+    #[Route('/{restaurantId}/menu/{menuId}/plat/{platId}/delete', name: 'restaurant_delete_plat', methods: ['POST'])]
+    public function deletePlat(int $restaurantId, int $menuId, int $platId): RedirectResponse
+    {
+        $restaurant = $this->restaurantRepository->find($restaurantId);
+        $menu = $this->menuRepository->find($menuId);
+        $plat = $this->platRepository->find($platId);
+        
+        if (!$restaurant || !$menu || !$plat || $restaurant->getRestaurateur() !== $this->getUser()) {
+            return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurantId]);
+        }
+    
+        $menu->removePlat($plat);
+        $this->entityManager->remove($plat);
+        $this->entityManager->flush();
+    
+        return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurantId]);
+    }
+
+    #[Route('/{restaurantId}/menu/{menuId}/delete', name: 'restaurant_delete_menu', methods: ['POST'])]
+    public function deleteMenu(int $restaurantId, int $menuId): RedirectResponse
+    {
+        $restaurant = $this->restaurantRepository->find($restaurantId);
+        $menu = $this->menuRepository->find($menuId);
+    
+        if (!$restaurant || !$menu || $restaurant->getRestaurateur() !== $this->getUser()) {
+            return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurantId]);
+        }
+    
+        $this->entityManager->remove($menu);
+        $this->entityManager->flush();
+    
+        return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurantId]);
+    }
+
+    #[Route('/{restaurantId}/menu/{menuId}/plat/{platId}/modify', name: 'restaurant_modify_plat')]
+    public function modifyPlat(int $restaurantId, int $menuId, int $platId, Request $request): Response
+    {
+        $restaurant = $this->restaurantRepository->find($restaurantId);
+        $menu = $this->menuRepository->find($menuId);
+        $plat = $this->platRepository->find($platId);
+        if (!$restaurant || !$menu || !$plat || $restaurant->getRestaurateur() !== $this->getUser()) {
+            return $this->redirectToRoute('restaurant_list');
+        }
+        $platForm = $this->createForm(PlatType::class, $plat);
+        $platForm->handleRequest($request);
+
+        if ($platForm->isSubmitted() && $platForm->isValid()) {
+            $this->entityManager->flush();
+            return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurantId]);
+        }
+        return $this->render('plat/modify.html.twig', [
+            'restaurant' => $restaurant,
+            'menu' => $menu,
+            'plat' => $plat,
             'platForm' => $platForm->createView(),
         ]);
     }

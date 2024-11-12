@@ -16,6 +16,10 @@
         <div>
             <h4>{{ menu.name }}</h4>
 
+            <form method="post" action="{{ path('restaurant_delete_menu', {'restaurantId': restaurant.id, 'menuId': menu.id}) }}">
+                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce menu ?');">Supprimer le menu</button>
+            </form>
+
             <h5>Plats dans ce menu:</h5>
             <ul>
                 {% for plat in menu.plats %}
@@ -24,6 +28,11 @@
                         <em>Catégorie: {{ plat.categorie }}</em><br>
                         <em>Ingrédients: {{ plat.ingredients }}</em><br>
                         <strong>Prix: {{ plat.prix }}€</strong>
+
+                        <form method="post" action="{{ path('restaurant_delete_plat', {'restaurantId': restaurant.id, 'menuId': menu.id, 'platId': plat.id}) }}">
+                            <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce plat ?');">Supprimer le plat</button>
+                        </form>
+                        <a href="{{ path('restaurant_modify_plat', {'restaurantId': restaurant.id, 'menuId': menu.id, 'platId': plat.id}) }}">Modifier le plat</a>
                     </li>
                 {% else %}
                     <p>Aucun plat dans ce menu.</p>
@@ -31,14 +40,14 @@
             </ul>
 
             <h5>Ajouter un plat à ce menu</h5>
-            {{ form_start(platForm) }}
+            {{ form_start(platForms[menu.id]) }}
                 <input type="hidden" name="menu_id" value="{{ menu.id }}">
-                {{ form_row(platForm.nom) }}
-                {{ form_row(platForm.ingredients) }}
-                {{ form_row(platForm.prix) }}
-                {{ form_row(platForm.categorie) }}
-                <button type="submit">Ajouter un plat</button>
-            {{ form_end(platForm) }}
+                {{ form_row(platForms[menu.id].nom) }}
+                {{ form_row(platForms[menu.id].ingredients) }}
+                {{ form_row(platForms[menu.id].prix) }}
+                {{ form_row(platForms[menu.id].categorie) }}
+                <button type="submit">Ajouter le plat</button>
+            {{ form_end(platForms[menu.id]) }}
         </div>
     {% else %}
         <p>Aucun menu disponible pour ce restaurant.</p>
