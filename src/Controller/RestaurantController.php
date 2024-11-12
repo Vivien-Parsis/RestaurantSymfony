@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route("/restaurant")]
@@ -57,7 +58,7 @@ class RestaurantController extends AbstractController
     }
 
     #[Route('/create', name: 'restaurant_create')]
-    public function create(Request $request): Response
+    public function create(Request $request): Response | RedirectResponse
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $restaurant = new Restaurant();
@@ -78,7 +79,7 @@ class RestaurantController extends AbstractController
 
     //TODO:REMOVE THIS ROUTE
     #[Route('/creates', name: 'restaurant_create')]
-    public function creates(Request $request): Response
+    public function creates(Request $request): Response | RedirectResponse
     {
         //$this->denyAccessUnlessGranted('ROLE_USER');
         $restaurant = new Restaurant();
@@ -98,7 +99,7 @@ class RestaurantController extends AbstractController
     }
 
     #[Route("/manage/{id}", name:"restaurant_manage")]
-    public function manageRestaurant(int $id): Response
+    public function manageRestaurant(int $id): Response | RedirectResponse
     {
         $restaurant = $this->restaurantRepository->find($id);
         if (!$restaurant || $restaurant->getRestaurateur() !== $this->getUser()) {
@@ -111,7 +112,7 @@ class RestaurantController extends AbstractController
     }
 
     #[Route('/restaurant/{id}/manage/menus', name: 'restaurant_manage_menus')]
-    public function manageMenus(int $id, Request $request): Response
+    public function manageMenus(int $id, Request $request): Response | RedirectResponse
     {
         $restaurant = $this->restaurantRepository->find($id);
 
@@ -160,7 +161,7 @@ class RestaurantController extends AbstractController
     }
 
     #[Route("/restaurant/{id}/manage/commandes", name:"restaurant_manage_commandes")]
-    public function showCommandes(int $id): Response
+    public function showCommandes(int $id): Response | RedirectResponse
     {
         $restaurant = $this->restaurantRepository->find($id);
         if (!$restaurant || $restaurant->getRestaurateur() !== $this->getUser()) {
