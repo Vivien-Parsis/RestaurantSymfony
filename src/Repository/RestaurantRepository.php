@@ -16,28 +16,20 @@ class RestaurantRepository extends ServiceEntityRepository
         parent::__construct($registry, Restaurant::class);
     }
 
-    //    /**
-    //     * @return Restaurant[] Returns an array of Restaurant objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('r.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    // Exemple d'une méthode pour rechercher un restaurant par nom
+    public function findByName(string $name): array
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.nom LIKE :name')
+            ->setParameter('name', '%' . $name . '%')
+            ->orderBy('r.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Restaurant
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    // Exemple d'une méthode pour récupérer un restaurant par son ID
+    public function findOneById(int $id): ?Restaurant
+    {
+        return $this->find($id);
+    }
 }
