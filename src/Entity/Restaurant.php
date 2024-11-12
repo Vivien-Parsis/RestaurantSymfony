@@ -40,6 +40,9 @@ class Restaurant
     #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'Restaurant')]
     private Collection $commandes;
 
+    #[ORM\OneToOne(inversedBy: 'restaurant', cascade: ['persist', 'remove'])]
+    private ?user $restaurateur = null;
+
     
 
     public function __construct()
@@ -150,6 +153,18 @@ class Restaurant
                 $commande->setRestaurant(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRestaurateur(): ?user
+    {
+        return $this->restaurateur;
+    }
+
+    public function setRestaurateur(?user $restaurateur): static
+    {
+        $this->restaurateur = $restaurateur;
 
         return $this;
     }

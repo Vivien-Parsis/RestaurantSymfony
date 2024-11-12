@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes pour {{ restaurant.nom }}{% endblock %}
+
+{% block body %}
+    <h1>Commandes pour le restaurant {{ restaurant.nom }}</h1>
+
+    {% if commandes is empty %}
+        <p>Aucune commande disponible pour ce restaurant.</p>
+    {% else %}
+        <h3>Liste des Commandes:</h3>
+        <ul>
+            {% for commande in commandes %}
+                <li>
+                    <strong>Commande #{{ commande.id }}</strong><br>
+                    <em>Client: {{ commande.client.nom }} {{ commande.client.prenom }}</em><br>
+                    <em>Date: {{ commande.createdAt|date('d/m/Y H:i') }}</em><br>
+                    <strong>Plats:</strong>
+                    <ul>
+                        {% for plat in commande.plats %}
+                            <li>{{ plat.nom }} - {{ plat.prix }}€</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion de Restaurant - {{ restaurant.nom }}{% endblock %}
+
+{% block body %}
+    <h1>Gérer le restaurant: {{ restaurant.nom }}</h1>
+
+    <h3>Informations du restaurant:</h3>
+    <p><strong>Nom:</strong> {{ restaurant.nom }}</p>
+    <p><strong>Adresse:</strong> {{ restaurant.adresse }}</p>
+    <p><strong>Catégorie:</strong> {{ restaurant.categorie }}</p>
+
+    <h3>Actions disponibles:</h3>
+    <ul>
+        <li><a href="{{ path('restaurant_manage_menu', {'id': restaurant.id}) }}">Gérer les menus</a></li>
+        <li><a href="{{ path('restaurant_manages_commandes', {'id': restaurant.id}) }}">Voir les commandes</a></li>
+    </ul>
+{% endblock %}

@@ -33,9 +33,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?restaurant $restaurant = null;
-
     #[ORM\Column(length: 255)]
     private ?string $addresse = null;
 
@@ -50,6 +47,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'client')]
     private Collection $commandes;
+
+    #[ORM\OneToOne(mappedBy: 'restaurateur', cascade: ['persist', 'remove'])]
+    private ?Restaurant $restaurant = null;
 
     public function __construct()
     {
@@ -131,18 +131,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getRestaurant(): ?restaurant
-    {
-        return $this->restaurant;
-    }
-
-    public function setRestaurant(?restaurant $restaurant): static
-    {
-        $this->restaurant = $restaurant;
-
-        return $this;
-    }
-
     public function getAddresse(): ?string
     {
         return $this->addresse;
@@ -205,6 +193,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $commande->setClient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRestaurant(): ?Restaurant
+    {
+        return $this->restaurant;
+    }
+
+    public function setRestaurant(?Restaurant $restaurant): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($restaurant === null && $this->restaurant !== null) {
+            $this->restaurant->setRestaurateur(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($restaurant !== null && $restaurant->getRestaurateur() !== $this) {
+            $restaurant->setRestaurateur($this);
+        }
+
+        $this->restaurant = $restaurant;
 
         return $this;
     }

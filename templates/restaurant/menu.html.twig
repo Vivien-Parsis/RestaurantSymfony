@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Menu pour {{ restaurant.nom }}{% endblock %}
+
+{% block body %}
+    <h1>Menu pour {{ restaurant.nom }}</h1>
+
+    <h3>Menus:</h3>
+    {% for menu in menus %}
+        {% include 'menu/item.html.twig' with {'menu': menu} %}
+    {% else %}
+        <p>Pas de menu disponible pour ce restaurant.</p>
+    {% endfor %}
+{% endblock %}

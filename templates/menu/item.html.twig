@@ -1,0 +1,15 @@
+<h4>{{ menu.name }}</h4>
+<ul>
+    {% for plat in menu.plats %}
+        <li>
+            <strong>{{ plat.nom }}</strong><br>
+            <em>Categorie: {{ plat.categorie }}</em><br>
+            <em>Ingredients: {{ plat.ingredients }}</em><br>
+            <strong>Price: {{ plat.prix }}€</strong>
+        </li>
+    {% endfor %}
+</ul>
+
+{% if menu.plats is empty %}
+    <p>Aucun plat disponible pour ce menu.</p>
+{% endif %}

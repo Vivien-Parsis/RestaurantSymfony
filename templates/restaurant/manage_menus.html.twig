@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Manage Menus{% endblock %}
+
+{% block body %}
+    <h1>Manage Menus for {{ restaurant.nom }}</h1>
+
+    <h3>Current Menus:</h3>
+    <ul>
+        {% for menu in menus %}
+            <li>
+                {{ menu.name }}
+                <ul>
+                    {% for plat in menu.plats %}
+                        <li>{{ plat.nom }} - {{ plat.prix }} €</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h3>Add a New Plat to a Menu</h3>
+    {{ form_start(form) }}
+        {{ form_row(form.nom) }}
+        {{ form_row(form.ingredients) }}
+        {{ form_row(form.prix) }}
+        {{ form_row(form.categorie) }}
+        {{ form_row(form.menu) }}
+        {{ form_row(form.submit) }}
+    {{ form_end(form) }}
+
+{% endblock %}
