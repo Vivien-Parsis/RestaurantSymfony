@@ -1,32 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Manage Menus{% endblock %}
+{% block title %}Gestion des menus pour {{ restaurant.nom }}{% endblock %}
 
 {% block body %}
-    <h1>Manage Menus for {{ restaurant.nom }}</h1>
+    <h1>Gestion des menus pour {{ restaurant.nom }}</h1>
 
-    <h3>Current Menus:</h3>
-    <ul>
-        {% for menu in menus %}
-            <li>
-                {{ menu.name }}
-                <ul>
-                    {% for plat in menu.plats %}
-                        <li>{{ plat.nom }} - {{ plat.prix }} €</li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-    </ul>
+    <h3>Créer un nouveau menu</h3>
+    {{ form_start(menuForm) }}
+        {{ form_row(menuForm.name) }}
+        <button type="submit">Créer un menu</button>
+    {{ form_end(menuForm) }}
 
-    <h3>Add a New Plat to a Menu</h3>
-    {{ form_start(form) }}
-        {{ form_row(form.nom) }}
-        {{ form_row(form.ingredients) }}
-        {{ form_row(form.prix) }}
-        {{ form_row(form.categorie) }}
-        {{ form_row(form.menu) }}
-        {{ form_row(form.submit) }}
-    {{ form_end(form) }}
+    <h3>Menus existants</h3>
+    {% for menu in menus %}
+        <div>
+            <h4>{{ menu.name }}</h4>
 
+            <h5>Plats dans ce menu:</h5>
+            <ul>
+                {% for plat in menu.plats %}
+                    <li>
+                        <strong>{{ plat.nom }}</strong><br>
+                        <em>Catégorie: {{ plat.categorie }}</em><br>
+                        <em>Ingrédients: {{ plat.ingredients }}</em><br>
+                        <strong>Prix: {{ plat.prix }}€</strong>
+                    </li>
+                {% else %}
+                    <p>Aucun plat dans ce menu.</p>
+                {% endfor %}
+            </ul>
+
+            <h5>Ajouter un plat à ce menu</h5>
+            {{ form_start(platForm) }}
+                <input type="hidden" name="menu_id" value="{{ menu.id }}">
+                {{ form_row(platForm.nom) }}
+                {{ form_row(platForm.ingredients) }}
+                {{ form_row(platForm.prix) }}
+                {{ form_row(platForm.categorie) }}
+                <button type="submit">Ajouter un plat</button>
+            {{ form_end(platForm) }}
+        </div>
+    {% else %}
+        <p>Aucun menu disponible pour ce restaurant.</p>
+    {% endfor %}
 {% endblock %}

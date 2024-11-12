@@ -41,7 +41,7 @@ class Restaurant
     private Collection $commandes;
 
     #[ORM\OneToOne(inversedBy: 'restaurant', cascade: ['persist', 'remove'])]
-    private ?user $restaurateur = null;
+    private ?User $restaurateur = null;
 
     
 
@@ -157,12 +157,12 @@ class Restaurant
         return $this;
     }
 
-    public function getRestaurateur(): ?user
+    public function getRestaurateur(): ?User
     {
         return $this->restaurateur;
     }
 
-    public function setRestaurateur(?user $restaurateur): static
+    public function setRestaurateur(?User $restaurateur): static
     {
         $this->restaurateur = $restaurateur;
 

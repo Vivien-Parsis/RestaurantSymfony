@@ -19,12 +19,12 @@ class Commande
     private ?restaurant $Restaurant = null;
 
     #[ORM\ManyToOne(inversedBy: 'commandes')]
-    private ?user $client = null;
+    private ?User $client = null;
 
     /**
-     * @var Collection<int, plat>
+     * @var Collection<int, Plat>
      */
-    #[ORM\ManyToMany(targetEntity: plat::class, inversedBy: 'commandes')]
+    #[ORM\ManyToMany(targetEntity: Plat::class, inversedBy: 'commandes')]
     private Collection $plats;
 
     public function __construct()
@@ -49,12 +49,12 @@ class Commande
         return $this;
     }
 
-    public function getClient(): ?user
+    public function getClient(): ?User
     {
         return $this->client;
     }
 
-    public function setClient(?user $client): static
+    public function setClient(?User $client): static
     {
         $this->client = $client;
 
@@ -62,14 +62,14 @@ class Commande
     }
 
     /**
-     * @return Collection<int, plat>
+     * @return Collection<int, Plat>
      */
     public function getPlats(): Collection
     {
         return $this->plats;
     }
 
-    public function addPlat(plat $plat): static
+    public function addPlat(Plat $plat): static
     {
         if (!$this->plats->contains($plat)) {
             $this->plats->add($plat);
@@ -78,7 +78,7 @@ class Commande
         return $this;
     }
 
-    public function removePlat(plat $plat): static
+    public function removePlat(Plat $plat): static
     {
         $this->plats->removeElement($plat);
 

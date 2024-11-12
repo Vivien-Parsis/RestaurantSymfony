@@ -2,16 +2,17 @@
 
 namespace App\Controller;
 
-use App\Entity\Restaurant;
 use App\Entity\Menu;
-use App\Entity\Commande;
 use App\Entity\Plat;
-use App\Form\RestaurantType;
+use App\Entity\Restaurant;
+use App\Form\MenuType;
 use App\Form\PlatType;
-use App\Repository\RestaurantRepository;
+use App\Form\RestaurantType;
 use App\Repository\MenuRepository;
 use App\Repository\PlatRepository;
 use App\Repository\CommandeRepository;
+use App\Repository\RestaurantRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,18 +25,21 @@ class RestaurantController extends AbstractController
     private PlatRepository $platRepository;
     private CommandeRepository $commandeRepository;
 
-    public function __construct(RestaurantRepository $restaurantRepository, MenuRepository $menuRepository, PlatRepository $platRepository, CommandeRepository $commandeRepository) {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(RestaurantRepository $restaurantRepository, MenuRepository $menuRepository, PlatRepository $platRepository, CommandeRepository $commandeRepository, EntityManagerInterface $entityManager) {
         $this->restaurantRepository = $restaurantRepository;
         $this->menuRepository = $menuRepository;
         $this->platRepository = $platRepository;
         $this->commandeRepository = $commandeRepository;
+        $this->entityManager = $entityManager;
     }
     #[Route('/restaurants', name: 'restaurant_list')]
     public function list(): Response
     {
         $restaurants = $this->restaurantRepository->findAll();
 
-        return $this->render('restaurant/list.html.twig', [
+        return $this->render('restaurant/index.html.twig', [
             'restaurants' => $restaurants,
         ]);
     }
@@ -87,26 +91,48 @@ class RestaurantController extends AbstractController
     public function manageMenus(int $id, Request $request): Response
     {
         $restaurant = $this->restaurantRepository->find($id);
-        if (!$restaurant || $restaurant->getUser() !== $this->getUser()) {
-            $this->denyAccessUnlessGranted('ROLE_USER');
+
+        if ($restaurant === null) {
+            throw $this->createNotFoundException('Restaurant not found');
+        }
+        if ($restaurant->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('restaurant_list');
         }
-        $menus = $this->menuRepository->findBy(['restaurant' => $restaurant]);
-        $plat = new Plat();
-        $form = $this->createForm(PlatType::class, $plat);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $menu = $form->get('menu')->getData();
-            $plat->addMenu($menu);
-            $this->platRepository->save($plat, true);
-            $this->addFlash('success', 'Plat ajouter');
+        $menu = new Menu();
+        $menuForm = $this->createForm(MenuType::class, $menu);
+        $menuForm->handleRequest($request);
+
+        if ($menuForm->isSubmitted() && $menuForm->isValid()) {
+            $menu->setRestaurant($restaurant);
+            $this->entityManager->persist($menu);
+            $this->entityManager->flush();
+
             return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurant->getId()]);
         }
+        $plat = new Plat();
+        $platForm = $this->createForm(PlatType::class, $plat);
+        $platForm->handleRequest($request);
+
+        if ($platForm->isSubmitted() && $platForm->isValid()) {
+            $menuId = $request->request->get('menu_id');
+            $menu = $this->menuRepository->find($menuId);
+
+            if ($menu) {
+                $plat->addMenu($menu);
+                $this->entityManager->persist($plat);
+                $this->entityManager->flush();
+
+                return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurant->getId()]);
+            }
+        }
+
+        $menus = $this->menuRepository->findBy(['restaurant' => $restaurant]);
 
         return $this->render('restaurant/manage_menus.html.twig', [
             'restaurant' => $restaurant,
             'menus' => $menus,
-            'form' => $form->createView(),
+            'menuForm' => $menuForm->createView(),
+            'platForm' => $platForm->createView(),
         ]);
     }
 

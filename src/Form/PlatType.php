@@ -29,15 +29,6 @@ class PlatType extends AbstractType
             ->add('categorie', TextType::class, [
                 'label' => 'Category',
             ])
-            ->add('menu', ChoiceType::class, [
-                'label' => 'Menu',
-                'choices' => $options['menus'],
-                'choice_label' => function ($menu) {
-                    return $menu->getName();
-                },
-                'expanded' => false,
-                'multiple' => false,
-            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Add Plat',
             ]);
@@ -46,8 +37,7 @@ class PlatType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Plat::class,
-            'menus' => [],
+            'data_class' => Plat::class
         ]);
     }
 }
