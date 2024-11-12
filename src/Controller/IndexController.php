@@ -6,9 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class MenuController extends AbstractController
+class IndexController extends AbstractController
 {
-    #[Route('/menu', name: 'app_menu')]
+    #[Route('/', name: 'app_menu')]
     public function index(): Response
     {
         return $this->render('item.html.twig', [

@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route("/restaurant")]
 class RestaurantController extends AbstractController
 {
     private RestaurantRepository $restaurantRepository;
@@ -34,7 +35,7 @@ class RestaurantController extends AbstractController
         $this->commandeRepository = $commandeRepository;
         $this->entityManager = $entityManager;
     }
-    #[Route('/restaurants', name: 'restaurant_list')]
+    #[Route('/', name: 'restaurant_list')]
     public function list(): Response
     {
         $restaurants = $this->restaurantRepository->findAll();
@@ -44,7 +45,7 @@ class RestaurantController extends AbstractController
         ]);
     }
 
-    #[Route('/restaurant/{id}/menu', name: 'restaurant_menu')]
+    #[Route('/{id}/menu', name: 'restaurant_menu')]
     public function menu(Restaurant $restaurant): Response
     {
         $menus = $restaurant->getMenus();
@@ -55,7 +56,7 @@ class RestaurantController extends AbstractController
         ]);
     }
 
-    #[Route('/restaurant/create', name: 'restaurant_create')]
+    #[Route('/create', name: 'restaurant_create')]
     public function create(Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -65,7 +66,8 @@ class RestaurantController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
             $restaurant->setRestaurateur($user);
-            $this->restaurantRepository->save($restaurant, true);
+            $this->entityManager->persist($restaurant);
+            $this->entityManager->flush();
             return $this->redirectToRoute('restaurant_list');
         }
 
@@ -74,11 +76,32 @@ class RestaurantController extends AbstractController
         ]);
     }
 
-    #[Route("/restaurant/manage/{id}", name:"restaurant_manage")]
+    //TODO:REMOVE THIS ROUTE
+    #[Route('/creates', name: 'restaurant_create')]
+    public function creates(Request $request): Response
+    {
+        //$this->denyAccessUnlessGranted('ROLE_USER');
+        $restaurant = new Restaurant();
+        $form = $this->createForm(RestaurantType::class, $restaurant);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = null;
+            $restaurant->setRestaurateur($user);
+            $this->entityManager->persist($restaurant);
+            $this->entityManager->flush();
+            return $this->redirectToRoute('restaurant_list');
+        }
+
+        return $this->render('restaurant/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route("/manage/{id}", name:"restaurant_manage")]
     public function manageRestaurant(int $id): Response
     {
         $restaurant = $this->restaurantRepository->find($id);
-        if (!$restaurant || $restaurant->getUser() !== $this->getUser()) {
+        if (!$restaurant || $restaurant->getRestaurateur() !== $this->getUser()) {
             $this->denyAccessUnlessGranted('ROLE_USER');
             return $this->redirectToRoute('restaurant_list');
         }
@@ -95,7 +118,7 @@ class RestaurantController extends AbstractController
         if ($restaurant === null) {
             throw $this->createNotFoundException('Restaurant not found');
         }
-        if ($restaurant->getUser() !== $this->getUser()) {
+        if ($restaurant->getRestaurateur() !== $this->getUser()) {
             return $this->redirectToRoute('restaurant_list');
         }
         $menu = new Menu();
@@ -140,7 +163,7 @@ class RestaurantController extends AbstractController
     public function showCommandes(int $id): Response
     {
         $restaurant = $this->restaurantRepository->find($id);
-        if (!$restaurant || $restaurant->getUser() !== $this->getUser()) {
+        if (!$restaurant || $restaurant->getRestaurateur() !== $this->getUser()) {
             $this->denyAccessUnlessGranted('ROLE_USER');
             return $this->redirectToRoute('restaurant_list');
         }
