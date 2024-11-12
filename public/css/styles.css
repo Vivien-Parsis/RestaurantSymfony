@@ -1,0 +1,90 @@
+/* styles.css */
+
+/* Récupérer une police générale */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    /* Placer la hauteur de l'écran pour que le footer soit toujours en bas */
+}
+
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* Prendre toute la hauteur de la fenêtre */
+}
+
+main {
+    flex-grow: 1;
+    /* L'élément principal prend toute la place restante */
+    padding: 2rem 0;
+    background-color: white;
+}
+
+/* Barre de navigation */
+.navbar {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+}
+
+.navbar .logo {
+    font-size: 1.5rem;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar .nav-links {
+    list-style: none;
+    padding: 0;
+}
+
+.navbar .nav-links li {
+    display: inline;
+    margin-right: 20px;
+}
+
+.navbar .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.navbar .nav-links a:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    padding: 1rem 0;
+    text-align: center;
+    margin-top: auto;
+    /* Pousse le footer vers le bas */
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Autres styles généraux */
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+footer p {
+    margin: 0;
+}
