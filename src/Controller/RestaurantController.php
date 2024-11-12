@@ -58,34 +58,14 @@ class RestaurantController extends AbstractController
     }
 
     #[Route('/create', name: 'restaurant_create')]
-    public function create(Request $request): Response | RedirectResponse
+    public function make(Request $request): Response | RedirectResponse
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $restaurant = new Restaurant();
         $form = $this->createForm(RestaurantType::class, $restaurant);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser();
-            $restaurant->setRestaurateur($user);
-            $this->entityManager->persist($restaurant);
-            $this->entityManager->flush();
-            return $this->redirectToRoute('restaurant_list');
-        }
-
-        return $this->render('restaurant/create.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-
-    //TODO:REMOVE THIS ROUTE
-    #[Route('/creates', name: 'restaurant_create')]
-    public function creates(Request $request): Response | RedirectResponse
-    {
-        //$this->denyAccessUnlessGranted('ROLE_USER');
-        $restaurant = new Restaurant();
-        $form = $this->createForm(RestaurantType::class, $restaurant);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+            //$user = $this->getUser();
             $user = null;
             $restaurant->setRestaurateur($user);
             $this->entityManager->persist($restaurant);
