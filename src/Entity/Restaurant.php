@@ -37,8 +37,10 @@ class Restaurant
     /**
      * @var Collection<int, Commande>
      */
-    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'restaurant')]
+    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'Restaurant')]
     private Collection $commandes;
+
+    
 
     public function __construct()
     {
@@ -151,4 +153,5 @@ class Restaurant
 
         return $this;
     }
+
 }

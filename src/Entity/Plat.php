@@ -36,8 +36,10 @@ class Plat
     /**
      * @var Collection<int, Commande>
      */
-    #[ORM\ManyToMany(targetEntity: Commande::class, mappedBy: 'plat')]
+    #[ORM\ManyToMany(targetEntity: Commande::class, mappedBy: 'plats')]
     private Collection $commandes;
+
+    
 
     public function __construct()
     {
@@ -153,4 +155,5 @@ class Plat
 
         return $this;
     }
+
 }

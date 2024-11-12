@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\CommandeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
@@ -17,23 +16,20 @@ class Commande
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'commandes')]
-    private ?utilisateur $client = null;
+    private ?restaurant $Restaurant = null;
 
     #[ORM\ManyToOne(inversedBy: 'commandes')]
-    private ?restaurant $restaurant = null;
+    private ?user $client = null;
 
     /**
      * @var Collection<int, plat>
      */
     #[ORM\ManyToMany(targetEntity: plat::class, inversedBy: 'commandes')]
-    private Collection $plat;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
+    private Collection $plats;
 
     public function __construct()
     {
-        $this->plat = new ArrayCollection();
+        $this->plats = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -41,26 +37,26 @@ class Commande
         return $this->id;
     }
 
-    public function getClient(): ?utilisateur
+    public function getRestaurant(): ?restaurant
     {
-        return $this->client;
+        return $this->Restaurant;
     }
 
-    public function setClient(?utilisateur $client): static
+    public function setRestaurant(?restaurant $Restaurant): static
     {
-        $this->client = $client;
+        $this->Restaurant = $Restaurant;
 
         return $this;
     }
 
-    public function getRestaurant(): ?restaurant
+    public function getClient(): ?user
     {
-        return $this->restaurant;
+        return $this->client;
     }
 
-    public function setRestaurant(?restaurant $restaurant): static
+    public function setClient(?user $client): static
     {
-        $this->restaurant = $restaurant;
+        $this->client = $client;
 
         return $this;
     }
@@ -68,15 +64,15 @@ class Commande
     /**
      * @return Collection<int, plat>
      */
-    public function getPlat(): Collection
+    public function getPlats(): Collection
     {
-        return $this->plat;
+        return $this->plats;
     }
 
     public function addPlat(plat $plat): static
     {
-        if (!$this->plat->contains($plat)) {
-            $this->plat->add($plat);
+        if (!$this->plats->contains($plat)) {
+            $this->plats->add($plat);
         }
 
         return $this;
@@ -84,19 +80,7 @@ class Commande
 
     public function removePlat(plat $plat): static
     {
-        $this->plat->removeElement($plat);
-
-        return $this;
-    }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): static
-    {
-        $this->date = $date;
+        $this->plats->removeElement($plat);
 
         return $this;
     }
