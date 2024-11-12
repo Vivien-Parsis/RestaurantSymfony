@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ClientRepository;
+use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ClientRepository::class)]
-class Client
+#[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
+class Utilisateur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -25,6 +25,12 @@ class Client
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    private ?string $password = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?restaurant $restaurant = null;
+
+    #[ORM\Column(length: 255)]
     private ?string $adresse = null;
 
     /**
@@ -33,14 +39,10 @@ class Client
     #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'client')]
     private Collection $commandes;
 
-    #[ORM\Column(length: 255)]
-    private ?string $password = null;
-
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -83,6 +85,30 @@ class Client
         return $this;
     }
 
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getRestaurant(): ?restaurant
+    {
+        return $this->restaurant;
+    }
+
+    public function setRestaurant(?restaurant $restaurant): static
+    {
+        $this->restaurant = $restaurant;
+
+        return $this;
+    }
+
     public function getAdresse(): ?string
     {
         return $this->adresse;
@@ -121,18 +147,6 @@ class Client
                 $commande->setClient(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): static
-    {
-        $this->password = $password;
 
         return $this;
     }

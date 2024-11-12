@@ -24,16 +24,9 @@ class Restaurant
     #[ORM\Column(length: 255)]
     private ?string $categorie = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Restaurants')]
-    private ?Restaurateur $restaurateur = null;
-
     
 
-    /**
-     * @var Collection<int, Commande>
-     */
-    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'restaurant')]
-    private Collection $commandes;
+    
 
     /**
      * @var Collection<int, Menu>
@@ -41,10 +34,16 @@ class Restaurant
     #[ORM\OneToMany(targetEntity: Menu::class, mappedBy: 'restaurant')]
     private Collection $menus;
 
+    /**
+     * @var Collection<int, Commande>
+     */
+    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'restaurant')]
+    private Collection $commandes;
+
     public function __construct()
     {
-        $this->commandes = new ArrayCollection();
         $this->menus = new ArrayCollection();
+        $this->commandes = new ArrayCollection();
     }
 
 
@@ -89,49 +88,9 @@ class Restaurant
         return $this;
     }
 
-    public function getRestaurateur(): ?Restaurateur
-    {
-        return $this->restaurateur;
-    }
-
-    public function setRestaurateur(?Restaurateur $restaurateur): static
-    {
-        $this->restaurateur = $restaurateur;
-
-        return $this;
-    }
-
     
 
-    /**
-     * @return Collection<int, Commande>
-     */
-    public function getCommandes(): Collection
-    {
-        return $this->commandes;
-    }
-
-    public function addCommande(Commande $commande): static
-    {
-        if (!$this->commandes->contains($commande)) {
-            $this->commandes->add($commande);
-            $commande->setRestaurant($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCommande(Commande $commande): static
-    {
-        if ($this->commandes->removeElement($commande)) {
-            // set the owning side to null (unless already changed)
-            if ($commande->getRestaurant() === $this) {
-                $commande->setRestaurant(null);
-            }
-        }
-
-        return $this;
-    }
+    
 
     /**
      * @return Collection<int, Menu>
@@ -157,6 +116,36 @@ class Restaurant
             // set the owning side to null (unless already changed)
             if ($menu->getRestaurant() === $this) {
                 $menu->setRestaurant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): static
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes->add($commande);
+            $commande->setRestaurant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): static
+    {
+        if ($this->commandes->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getRestaurant() === $this) {
+                $commande->setRestaurant(null);
             }
         }
 

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CommandeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
@@ -16,7 +17,7 @@ class Commande
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'commandes')]
-    private ?client $client = null;
+    private ?utilisateur $client = null;
 
     #[ORM\ManyToOne(inversedBy: 'commandes')]
     private ?restaurant $restaurant = null;
@@ -25,11 +26,14 @@ class Commande
      * @var Collection<int, plat>
      */
     #[ORM\ManyToMany(targetEntity: plat::class, inversedBy: 'commandes')]
-    private Collection $plats;
+    private Collection $plat;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date = null;
 
     public function __construct()
     {
-        $this->plats = new ArrayCollection();
+        $this->plat = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -37,12 +41,12 @@ class Commande
         return $this->id;
     }
 
-    public function getClient(): ?client
+    public function getClient(): ?utilisateur
     {
         return $this->client;
     }
 
-    public function setClient(?client $client): static
+    public function setClient(?utilisateur $client): static
     {
         $this->client = $client;
 
@@ -64,15 +68,15 @@ class Commande
     /**
      * @return Collection<int, plat>
      */
-    public function getPlats(): Collection
+    public function getPlat(): Collection
     {
-        return $this->plats;
+        return $this->plat;
     }
 
     public function addPlat(plat $plat): static
     {
-        if (!$this->plats->contains($plat)) {
-            $this->plats->add($plat);
+        if (!$this->plat->contains($plat)) {
+            $this->plat->add($plat);
         }
 
         return $this;
@@ -80,7 +84,19 @@ class Commande
 
     public function removePlat(plat $plat): static
     {
-        $this->plats->removeElement($plat);
+        $this->plat->removeElement($plat);
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): static
+    {
+        $this->date = $date;
 
         return $this;
     }
