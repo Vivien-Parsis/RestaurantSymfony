@@ -41,6 +41,7 @@ class Restaurant
     private Collection $commandes;
 
     #[ORM\OneToOne(inversedBy: 'restaurant', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $restaurateur = null;
 
     
