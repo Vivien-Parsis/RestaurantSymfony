@@ -3,16 +3,22 @@
 {% block title %}Commander{% endblock %}
 
 {% block body %}
-    <h1>Restaurant: {{ restaurantId }}</h1>
+    <h1>Restaurant: {{ restaurant.nom }}</h1>
+    
+    <div class="restaurant-info">
+        <h2>Restaurant Information:</h2>
+        <p><strong>Addresse:</strong> {{ restaurant.adresse }}</p>
+        <p><strong>Categorie:</strong> {{ restaurant.categorie }}</p>
+    </div>
     
     <div class="current-command">
         <h3>Current Command:</h3>
         <ul>
             {% set totalPrice = 0 %}
             {% for plat in currentCommand %}
-                <li>
+                <li> 
                     {{ plat.nom }} - {{ plat.prix }} €
-                    <a href="{{ path('user_remove_from_command', { 'platId': plat.id, 'restaurantId': restaurantId }) }}">Remove</a>
+                    <a href="{{ path('user_remove_from_command', { 'platId': plat.id, 'restaurantId': restaurant.id }) }}">Remove</a>
                 </li>
                 {% set totalPrice = totalPrice + plat.prix %}
             {% else %}
@@ -22,10 +28,10 @@
 
         <h4>Total Price: {{ totalPrice }} €</h4>
 
-        <form action="{{ path('user_submit_command', { 'restaurantId': restaurantId }) }}" method="POST">
+        <form action="{{ path('user_submit_command', { 'restaurantId': restaurant.id }) }}" method="POST">
             <button type="submit">Submit Command</button>
         </form>
-        <a href="{{ path('user_reset_command', { 'restaurantId': restaurantId }) }}">Reset Command</a>
+        <a href="{{ path('user_reset_command', { 'restaurantId': restaurant.id }) }}">Reset Command</a>
     </div>
 
     <div class="menus">

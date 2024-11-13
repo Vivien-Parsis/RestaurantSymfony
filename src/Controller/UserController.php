@@ -59,32 +59,33 @@ class UserController extends AbstractController
 
     #[Route('/start-command/{restaurantId}', name: 'user_start_command')]
     public function startCommand(int $restaurantId, MenuRepository $menuRepository, PlatRepository $platRepository, Request $request): Response
-{
-    $menus = $menuRepository->createQueryBuilder('m')
-        ->leftJoin('m.plats', 'p')
-        ->leftJoin('m.restaurant', 'r')
-        ->where('r.id = :restaurantId')
-        ->setParameter('restaurantId', $restaurantId)
-        ->getQuery()
-        ->getResult();
-    
-    $session = $request->getSession();
-    if (!$session->has('command')) {
-        $session->set('command', []);
-    }
+    {
+        $restaurant = $this->entityManager->getRepository(Restaurant::class)->find($restaurantId);
+        if (!$restaurant) {
+            $this->addFlash('error', 'Restaurant not found.');
+            return $this->redirectToRoute('restaurant_list');
+        }
 
-    $plats = [];
-    foreach ($menus as $menu) {
-        $plats = array_merge($plats, $menu->getPlats()->toArray());
-    }
+        $menus = $menuRepository->findBy(['restaurant' => $restaurantId]);
+        if (empty($menus)) {
+            $this->addFlash('error', 'No menus found for this restaurant.');
+            return $this->redirectToRoute('restaurant_list');
+        }
 
-    return $this->render('user/start_command.html.twig', [
-        'restaurantId' => $restaurantId,
-        'menus' => $menus,
-        'plats' => $plats,
-        'currentCommand' => $session->get('command'),
-    ]);
-}
+        $plats = $platRepository->findBy(['menu' => $menus]);
+
+        $session = $request->getSession();
+        if (!$session->has('command')) {
+            $session->set('command', []);
+        }
+
+        return $this->render('user/start_command.html.twig', [
+            'restaurant' => $restaurant,
+            'menus' => $menus,
+            'plats' => $plats,
+            'currentCommand' => $session->get('command'),
+        ]);
+    }
 
     #[Route('/add-to-command/{platId}', name: 'user_add_to_command')]
     public function addToCommand(int $platId, PlatRepository $platRepository, Request $request): Response
