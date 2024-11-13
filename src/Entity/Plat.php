@@ -27,14 +27,14 @@ class Plat
     #[ORM\Column(length: 255)]
     private ?string $categorie = null;
 
-    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'plats', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'plats', cascade: ['persist'], fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Menu $menu = null;
 
     /**
      * @var Collection<int, Commande>
      */
-    #[ORM\ManyToMany(targetEntity: Commande::class, mappedBy: 'plats')]
+    #[ORM\ManyToMany(targetEntity: Commande::class, mappedBy: 'plats', fetch: 'EAGER', cascade: ['persist'])]
     private Collection $commandes;
 
     

@@ -15,10 +15,10 @@ class Commande
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'commandes', fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'commandes', fetch: 'EAGER', cascade: ['persist'])]
     private ?Restaurant $restaurant = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'commandes')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'commandes', fetch: 'EAGER', cascade: ['persist'])]
     private ?User $client = null;
     
 

@@ -27,16 +27,16 @@ class Restaurant
     /**
      * @var Collection<int, Menu>
      */
-    #[ORM\OneToMany(targetEntity: Menu::class, mappedBy: 'restaurant', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Menu::class, mappedBy: 'restaurant', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $menus;
 
     /**
      * @var Collection<int, Commande>
      */
-    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'restaurant', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'restaurant', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $commandes;
 
-    #[ORM\OneToOne(inversedBy: 'restaurant', cascade: ['persist'])]
+    #[ORM\OneToOne(inversedBy: 'restaurant', cascade: ['persist'], fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?User $restaurateur = null;
 
