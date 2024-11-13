@@ -24,24 +24,20 @@ class Restaurant
     #[ORM\Column(length: 255)]
     private ?string $categorie = null;
 
-    
-
-    
-
     /**
      * @var Collection<int, Menu>
      */
-    #[ORM\OneToMany(targetEntity: Menu::class, mappedBy: 'restaurant')]
+    #[ORM\OneToMany(targetEntity: Menu::class, mappedBy: 'restaurant', cascade: ['persist', 'remove'])]
     private Collection $menus;
 
     /**
      * @var Collection<int, Commande>
      */
-    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'Restaurant')]
+    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'restaurant', cascade: ['persist', 'remove'])]
     private Collection $commandes;
 
-    #[ORM\OneToOne(inversedBy: 'restaurant', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\OneToOne(inversedBy: 'restaurant', cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?User $restaurateur = null;
 
     
@@ -93,10 +89,6 @@ class Restaurant
 
         return $this;
     }
-
-    
-
-    
 
     /**
      * @return Collection<int, Menu>

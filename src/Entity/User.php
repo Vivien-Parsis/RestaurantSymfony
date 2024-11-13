@@ -50,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'client')]
     private Collection $commandes;
 
-    #[ORM\OneToOne(mappedBy: 'restaurateur', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'restaurateur', cascade: ['persist'])]
     private ?Restaurant $restaurant = null;
 
     public function __construct()

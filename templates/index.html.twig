@@ -2,7 +2,12 @@
 
 {% block body %}
     <h1>Application de restauration</h1>
-    <a href="{{ path('restaurant_list')}}">
-        <button>Voir les restaurants</button>
-    </a>
+    {% if is_granted('ROLE_USER') %}
+        <a href="{{ path('user_profile') }}">
+            <button>Voir votre profile</button>
+        </a>
+        <a href="{{ path('restaurant_list')}}">
+            <button>Voir les restaurants</button>
+        </a>
+    {% endif %}
 {% endblock %}

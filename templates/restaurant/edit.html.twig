@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le restaurant{% endblock %}
+
+{% block body %}
+    <h1>Modifier le restaurant: {{ restaurant.nom }}</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.nom) }}
+        {{ form_row(form.adresse) }}
+        {{ form_row(form.categorie) }}
+        <button type="submit">Enregistrer les modifications</button>
+    {{ form_end(form) }}
+    
+    <a href="{{ path('restaurant_list') }}">Retour à la liste des restaurants</a>
+{% endblock %}

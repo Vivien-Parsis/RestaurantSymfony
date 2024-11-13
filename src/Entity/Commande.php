@@ -15,16 +15,17 @@ class Commande
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'commandes')]
-    private ?restaurant $Restaurant = null;
+    #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'commandes', fetch: 'EAGER')]
+    private ?Restaurant $restaurant = null;
 
-    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'commandes')]
     private ?User $client = null;
+    
 
     /**
      * @var Collection<int, Plat>
      */
-    #[ORM\ManyToMany(targetEntity: Plat::class, inversedBy: 'commandes')]
+    #[ORM\ManyToMany(targetEntity: Plat::class, inversedBy: 'commandes', cascade: ['persist'], fetch: 'EAGER')]
     private Collection $plats;
 
     public function __construct()
@@ -39,12 +40,12 @@ class Commande
 
     public function getRestaurant(): ?restaurant
     {
-        return $this->Restaurant;
+        return $this->restaurant;
     }
 
     public function setRestaurant(?restaurant $Restaurant): static
     {
-        $this->Restaurant = $Restaurant;
+        $this->restaurant = $Restaurant;
 
         return $this;
     }

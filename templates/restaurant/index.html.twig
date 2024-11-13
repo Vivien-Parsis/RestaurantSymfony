@@ -11,7 +11,9 @@
                 <strong>{{ restaurant.nom }}</strong><br>
                 <em>{{ restaurant.adresse }}</em><br>
                 <em>Category: {{ restaurant.categorie }}</em><br>
-
+                <a href="{{ path('user_start_command', { 'restaurantId': restaurant.id }) }}" class="btn btn-primary">
+                    <button>Commander</button>
+                </a>
                 <a href="{{ path('restaurant_menu', {'id': restaurant.id}) }}">
                     <button>Voir menu</button>
                 </a>

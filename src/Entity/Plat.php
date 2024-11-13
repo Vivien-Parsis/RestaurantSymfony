@@ -27,11 +27,9 @@ class Plat
     #[ORM\Column(length: 255)]
     private ?string $categorie = null;
 
-    /**
-     * @var Collection<int, Menu>
-     */
-    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'plats')]
-    private Collection $menus;
+    #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'plats', cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Menu $menu = null;
 
     /**
      * @var Collection<int, Commande>
@@ -43,7 +41,6 @@ class Plat
 
     public function __construct()
     {
-        $this->menus = new ArrayCollection();
         $this->commandes = new ArrayCollection();
     }
 
@@ -102,33 +99,16 @@ class Plat
 
    
 
-    /**
-     * @return Collection<int, Menu>
-     */
-    public function getMenus(): Collection
+    public function getMenu(): ?Menu
     {
-        return $this->menus;
+        return $this->menu;
     }
 
-    public function addMenu(Menu $menu): static
+    public function setMenu(?Menu $menu): self
     {
-        if (!$this->menus->contains($menu)) {
-            $this->menus->add($menu);
-            $menu->addPlat($this);
-        }
-
+        $this->menu = $menu;
         return $this;
     }
-
-    public function removeMenu(Menu $menu): static
-    {
-        if ($this->menus->removeElement($menu)) {
-            $menu->removePlat($this);
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Commande>
      */

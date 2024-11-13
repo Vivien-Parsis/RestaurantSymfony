@@ -18,11 +18,12 @@ class Menu
     /**
      * @var Collection<int, Plat>
      */
-    #[ORM\ManyToMany(targetEntity: Plat::class, inversedBy: 'menus')]
+    #[ORM\OneToMany(targetEntity: Plat::class, mappedBy: 'menu')]
     private Collection $plats;
 
-    #[ORM\ManyToOne(inversedBy: 'menus')]
-    private ?restaurant $restaurant = null;
+    #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'menus', cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private ?Restaurant $restaurant = null;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;

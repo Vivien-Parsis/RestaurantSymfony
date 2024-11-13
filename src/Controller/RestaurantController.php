@@ -76,6 +76,44 @@ class RestaurantController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    #[Route('/{id}/edit', name: 'restaurant_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Restaurant $restaurant, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        if ($restaurant->getRestaurateur() !== $this->getUser()) {
+            return $this->redirectToRoute('restaurant_list');
+        }
+
+        $form = $this->createForm(RestaurantType::class, $restaurant);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('restaurant_list');
+        }
+
+        return $this->render('restaurant/edit.html.twig', [
+            'form' => $form->createView(),
+            'restaurant' => $restaurant,
+        ]);
+    }
+
+    #[Route('/{id}/delete', name: 'restaurant_delete', methods: ['POST'])]
+    public function delete(Request $request, Restaurant $restaurant, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        if ($restaurant->getRestaurateur() !== $this->getUser()) {
+            return $this->redirectToRoute('restaurant_list');
+        }
+
+        if ($this->isCsrfTokenValid('delete' . $restaurant->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($restaurant);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('restaurant_list');
+    }
 
     #[Route("/manage/{id}", name:"restaurant_manage")]
     public function manageRestaurant(int $id): Response | RedirectResponse
@@ -89,6 +127,7 @@ class RestaurantController extends AbstractController
             'restaurant' => $restaurant,
         ]);
     }
+
     #[Route('/{id}/manage/menus', name: 'restaurant_manage_menus')]
     public function manageMenus(int $id, Request $request): Response | RedirectResponse
     {
@@ -125,7 +164,7 @@ class RestaurantController extends AbstractController
             $platForms[$menu->getId()] = $platForm->createView();
     
             if ($platForm->isSubmitted() && $platForm->isValid() && $request->request->get('menu_id') == $menu->getId()) {
-                $plat->addMenu($menu);
+                $plat->setMenu($menu);
                 $this->entityManager->persist($plat);
                 $this->entityManager->flush();
     

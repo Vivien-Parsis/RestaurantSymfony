@@ -14,5 +14,13 @@
     <ul>
         <li><a href="{{ path('restaurant_manage_menus', {'id': restaurant.id}) }}">Gérer les menus</a></li>
         <li><a href="{{ path('restaurant_manage_commandes', {'id': restaurant.id}) }}">Voir les commandes</a></li>
+        <li><a href="{{ path('restaurant_edit', {'id': restaurant.id}) }}">Modifier le restaurant</a></li>
+        
+        <li>
+            <form method="post" action="{{ path('restaurant_delete', {'id': restaurant.id}) }}" style="display:inline;">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ restaurant.id) }}">
+                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce restaurant ?');">Supprimer le restaurant</button>
+            </form>
+        </li>
     </ul>
 {% endblock %}

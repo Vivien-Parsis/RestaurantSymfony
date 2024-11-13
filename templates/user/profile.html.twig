@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+    <h1>Profile</h1>
+
+    <p><strong>Name:</strong> {{ user.nom }} {{ user.prenom }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Addresse:</strong> {{ user.addresse }}</p>
+
+    {% if user.restaurant %}
+        <p><strong>Votre restaurant:</strong> <a href="{{ path('restaurant_manage', {'id': user.restaurant.id}) }}">{{ user.restaurant.nom }}</a></p>
+    {% endif %}
+
+    <p><a href="{{ path('user_commands') }}" class="btn btn-primary">Voir vos commandes</a></p>
+{% endblock %}

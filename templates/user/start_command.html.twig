@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commander{% endblock %}
+
+{% block body %}
+    <h1>Restaurant: {{ restaurantId }}</h1>
+    
+    <div class="current-command">
+        <h3>Current Command:</h3>
+        <ul>
+            {% set totalPrice = 0 %}
+            {% for plat in currentCommand %}
+                <li>
+                    {{ plat.nom }} - {{ plat.prix }} €
+                    <a href="{{ path('user_remove_from_command', { 'platId': plat.id, 'restaurantId': restaurantId }) }}">Remove</a>
+                </li>
+                {% set totalPrice = totalPrice + plat.prix %}
+            {% else %}
+                <p>No items in your current command yet.</p>
+            {% endfor %}
+        </ul>
+
+        <h4>Total Price: {{ totalPrice }} €</h4>
+
+        <form action="{{ path('user_submit_command', { 'restaurantId': restaurantId }) }}" method="POST">
+            <button type="submit">Submit Command</button>
+        </form>
+        <a href="{{ path('user_reset_command', { 'restaurantId': restaurantId }) }}">Reset Command</a>
+    </div>
+
+    <div class="menus">
+        {% for menu in menus %}
+            <h3>{{ menu.name }}</h3>
+            <ul>
+                {% for plat in menu.plats %}
+                    <li>
+                        <strong>{{ plat.nom }}</strong><br>
+                        <em>Ingredients: {{ plat.ingredients }}</em><br>
+                        <strong>Category: </strong>{{ plat.categorie }}<br>
+                        <strong>Price: </strong>{{ plat.prix }} €<br>
+                        
+                        <form action="{{ path('user_add_to_command', { 'platId': plat.id }) }}" method="POST">
+                            <button type="submit">Add to Command</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </div>
+{% endblock %}

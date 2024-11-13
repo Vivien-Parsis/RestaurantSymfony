@@ -22,9 +22,6 @@ class RestaurantType extends AbstractType
             ])
             ->add('categorie', TextType::class, [
                 'label' => 'Categorie',
-            ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Creer',
             ]);
     }
 
