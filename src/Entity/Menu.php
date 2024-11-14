@@ -18,11 +18,11 @@ class Menu
     /**
      * @var Collection<int, Plat>
      */
-    #[ORM\OneToMany(targetEntity: Plat::class, mappedBy: 'menu', fetch: 'EAGER', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Plat::class, mappedBy: 'menu', fetch: 'EAGER', cascade: ['persist', 'remove'])]
     private Collection $plats;
 
     #[ORM\ManyToOne(targetEntity: Restaurant::class, inversedBy: 'menus', cascade: ['persist'], fetch: 'EAGER')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'SET NULL')]
     private ?Restaurant $restaurant = null;
 
     #[ORM\Column(length: 255)]
