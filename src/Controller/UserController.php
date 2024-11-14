@@ -3,15 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Plat;
 use App\Entity\Commande;
 use App\Entity\Restaurant;
 use App\Form\UserProfileType;
 use App\Repository\PlatRepository;
 use App\Repository\MenuRepository;
 use App\Repository\CommandeRepository;
+use App\Repository\RestaurantRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -139,36 +142,33 @@ class UserController extends AbstractController
         return $this->redirectToRoute('user_start_command', ['restaurantId' => $restaurantId]);
     }
 
-    #[Route('/submit-command/{restaurantId}', name: 'user_submit_command', methods: ['POST'])]
-    public function submitCommand(int $restaurantId, Request $request): Response
+    #[Route('/submit-command/{restaurantId}', name: 'user_submit_command',methods:["POST"])]
+    public function submitCommand($restaurantId, Request $request, RestaurantRepository $restaurantRepository, EntityManagerInterface $entityManager, CommandeRepository $commandeRepository): RedirectResponse
     {
-        $user = $this->getUser();
-        $session = $request->getSession();
-        $commandData = $session->get('command', []);
+        $restaurant = $restaurantRepository->find($restaurantId);
 
-        if (empty($commandData)) {
-            $this->addFlash('error', 'Your command is empty.');
-            return $this->redirectToRoute('user_start_command', ['restaurantId' => $restaurantId]);
-        }
-
-        $restaurant = $this->entityManager->getRepository(Restaurant::class)->find($restaurantId);
         if (!$restaurant) {
-            $this->addFlash('error', 'Restaurant not found.');
+            $this->addFlash('error', 'Restaurant not found!');
             return $this->redirectToRoute('restaurant_list');
         }
 
         $commande = new Commande();
-        $commande->setClient($user);
         $commande->setRestaurant($restaurant);
+        $commande->setClient($this->getUser());
 
-        foreach ($commandData as $plat) {
-            $commande->addPlat($plat);
+        $platsIds = $request->get('plats', []);
+
+        foreach ($platsIds as $platId) {
+            $plat = $entityManager->getRepository(Plat::class)->find($platId);
+            if ($plat) {
+                $commande->addPlat($plat);
+            }
         }
-        $this->entityManager->persist($commande);
-        $this->entityManager->flush();
-        $session->remove('command');
 
-        $this->addFlash('success', 'Your command has been successfully placed.');
-        return $this->redirectToRoute('user_commands');
+        $entityManager->persist($commande);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Votre commande a été soumise avec succès.');
+        return $this->redirectToRoute('restaurant_list');
     }
 }

@@ -22,7 +22,7 @@
                     <form method="post" action="{{ path('user_command_delete', { 'id': command.id }) }}" onsubmit="return confirm('Etes-vous sur de vouloir supprimer cette commande?');">
                         <button type="submit">Supprimer</button>
                     </form>
-                    <a href="{{ path('user_command_edit', { 'id': command.id }) }}">Edit</a>
+                    
                 </li>
             {% endfor %}
         </ul>

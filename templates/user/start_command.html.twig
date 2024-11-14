@@ -29,6 +29,9 @@
         <h4>Prix Total: {{ prixTotal }} €</h4>
 
         <form action="{{ path('user_submit_command', { 'restaurantId': restaurant.id }) }}" method="POST">
+            {% for plat in commandeActuelle %}
+                <input type="hidden" name="plats[]" value="{{ plat.id }}">
+            {% endfor %}
             <button type="submit">Soumettre la Commande</button>
         </form>
         <a href="{{ path('user_reset_command', { 'restaurantId': restaurant.id }) }}">Réinitialisation de la Commande</a>
