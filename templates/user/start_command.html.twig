@@ -11,11 +11,11 @@
         <p><strong>Categorie:</strong> {{ restaurant.categorie }}</p>
     </div>
     
-    <div class="current-command">
+    <div class="commande-actuelle">
         <h3>Commande Actuelle:</h3>
         <ul>
             {% set prixTotal = 0 %}
-            {% for plat in currentCommand %}
+            {% for plat in commandeActuelle %}
                 <li> 
                     {{ plat.nom }} - {{ plat.prix }} €
                     <a href="{{ path('user_remove_from_command', { 'platId': plat.id, 'restaurantId': restaurant.id }) }}">Supprimer</a>
