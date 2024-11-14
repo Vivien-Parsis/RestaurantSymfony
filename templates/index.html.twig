@@ -3,11 +3,11 @@
 {% block body %}
     <h1>Application de restauration</h1>
     
-    <div class="welcome-section">
+    <div class="section-bienvenue">
         <p>Bienvenue sur notre application de restauration, votre guide ultime pour découvrir et explorer des restaurants ! Que vous soyez à la recherche d'un nouvel endroit où dîner, ou que vous souhaitiez revoir vos favoris, nous sommes là pour vous aider.</p>
     </div>
     
-    <div class="actions-section">
+    <div class="section-actions">
         {% if is_granted('ROLE_USER') %}
             <a href="{{ path('user_profile') }}">
                 <button>Voir votre profil</button>
@@ -26,7 +26,7 @@
         {% endif %}
     </div>
 
-    <div class="feature-section">
+    <div class="section-fonctionnalites">
         <h2>Fonctionnalités principales</h2>
         <ul>
             <li>Découvrez des restaurants proches de chez vous ou partout dans le monde.</li>
@@ -36,4 +36,3 @@
         </ul>
     </div>
 {% endblock %}
-
