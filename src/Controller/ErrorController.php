@@ -13,10 +13,10 @@ class ErrorController extends AbstractController
     {
         if ($exception instanceof NotFoundHttpException) {
             $template = 'error/404.html.twig';
-            $message = 'The page you are looking for could not be found.';
+            $message = 'Page non trouvée - Erreur 404';
         } else {
             $template = 'error/500.html.twig';
-            $message = 'An unexpected error has occurred. Please try again later.';
+            $message = 'Le serveur a rencontré une erreur inattendue. Veuillez réessayer plus tard.';
         }
 
         return $this->render($template, [
