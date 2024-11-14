@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Create Restaurant{% endblock %}
+{% block title %}Créer un Restaurant{% endblock %}
 
 {% block body %}
-    <h1>Create a new restaurant</h1>
+    <h1>Créer un nouveau restaurant</h1>
 
     {{ form_start(form) }}
         {{ form_row(form.nom) }}
         {{ form_row(form.adresse) }}
         {{ form_row(form.categorie) }}
-        <button type="submit">Creer</button>
+        <button type="submit">Créer</button>
     {{ form_end(form) }}
 {% endblock %}
