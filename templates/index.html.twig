@@ -4,10 +4,10 @@
     <h1>Application de restauration</h1>
     {% if is_granted('ROLE_USER') %}
         <a href="{{ path('user_profile') }}">
-            <button>Voir votre profile</button>
+            <button>Voire votre profil</button>
         </a>
         <a href="{{ path('restaurant_list')}}">
-            <button>Voir les restaurants</button>
+            <button>Voire les restaurants</button>
         </a>
     {% else %}
         <a href="{{ path('app_login') }}">
