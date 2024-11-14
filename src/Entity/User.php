@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: 'users')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'Il y a déjà un compte avec ce pseudo')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -50,7 +51,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'client', fetch: 'EAGER', cascade: ['persist'])]
     private Collection $commandes;
 
-    #[ORM\OneToOne(mappedBy: 'restaurateur', cascade: ['persist'], fetch: 'EAGER')]
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist'], fetch: 'EAGER')]
     private ?Restaurant $restaurant = null;
 
     public function __construct()
@@ -208,12 +209,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // unset the owning side of the relation if necessary
         if ($restaurant === null && $this->restaurant !== null) {
-            $this->restaurant->setRestaurateur(null);
+            $this->restaurant->setUser(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($restaurant !== null && $restaurant->getRestaurateur() !== $this) {
-            $restaurant->setRestaurateur($this);
+        if ($restaurant !== null && $restaurant->getUser() !== $this) {
+            $restaurant->setUser($this);
         }
 
         $this->restaurant = $restaurant;

@@ -66,7 +66,7 @@ class RestaurantController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
-            $restaurant->setRestaurateur($user);
+            $restaurant->setUser($user);
             $this->entityManager->persist($restaurant);
             $this->entityManager->flush();
             return $this->redirectToRoute('restaurant_list');
@@ -80,7 +80,7 @@ class RestaurantController extends AbstractController
     public function edit(Request $request, Restaurant $restaurant, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        if ($restaurant->getRestaurateur() !== $this->getUser()) {
+        if ($restaurant->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('restaurant_list');
         }
 
@@ -103,7 +103,7 @@ class RestaurantController extends AbstractController
     public function delete(Request $request, Restaurant $restaurant, EntityManagerInterface $entityManager): RedirectResponse
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-        if ($restaurant->getRestaurateur() !== $this->getUser()) {
+        if ($restaurant->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('restaurant_list');
         }
 
@@ -119,7 +119,7 @@ class RestaurantController extends AbstractController
     public function manageRestaurant(int $id): Response | RedirectResponse
     {
         $restaurant = $this->restaurantRepository->find($id);
-        if (!$restaurant || $restaurant->getRestaurateur() !== $this->getUser()) {
+        if (!$restaurant || $restaurant->getUser() !== $this->getUser()) {
             $this->denyAccessUnlessGranted('ROLE_USER');
             return $this->redirectToRoute('restaurant_list');
         }
@@ -136,7 +136,7 @@ class RestaurantController extends AbstractController
         if ($restaurant === null) {
             throw $this->createNotFoundException('Restaurant not found');
         }
-        if ($restaurant->getRestaurateur() !== $this->getUser()) {
+        if ($restaurant->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('restaurant_list');
         }
     
@@ -186,7 +186,7 @@ class RestaurantController extends AbstractController
         $menu = $this->menuRepository->find($menuId);
         $plat = $this->platRepository->find($platId);
         
-        if (!$restaurant || !$menu || !$plat || $restaurant->getRestaurateur() !== $this->getUser()) {
+        if (!$restaurant || !$menu || !$plat || $restaurant->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurantId]);
         }
     
@@ -203,7 +203,7 @@ class RestaurantController extends AbstractController
         $restaurant = $this->restaurantRepository->find($restaurantId);
         $menu = $this->menuRepository->find($menuId);
     
-        if (!$restaurant || !$menu || $restaurant->getRestaurateur() !== $this->getUser()) {
+        if (!$restaurant || !$menu || $restaurant->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurantId]);
         }
     
@@ -219,7 +219,7 @@ class RestaurantController extends AbstractController
         $restaurant = $this->restaurantRepository->find($restaurantId);
         $menu = $this->menuRepository->find($menuId);
         $plat = $this->platRepository->find($platId);
-        if (!$restaurant || !$menu || !$plat || $restaurant->getRestaurateur() !== $this->getUser()) {
+        if (!$restaurant || !$menu || !$plat || $restaurant->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('restaurant_list');
         }
         $platForm = $this->createForm(PlatType::class, $plat);
@@ -241,7 +241,7 @@ class RestaurantController extends AbstractController
     public function showCommandes(int $id): Response | RedirectResponse
     {
         $restaurant = $this->restaurantRepository->find($id);
-        if (!$restaurant || $restaurant->getRestaurateur() !== $this->getUser()) {
+        if (!$restaurant || $restaurant->getUser() !== $this->getUser()) {
             $this->denyAccessUnlessGranted('ROLE_USER');
             return $this->redirectToRoute('restaurant_list');
         }
