@@ -29,7 +29,8 @@ class RestaurantController extends AbstractController
 
     private EntityManagerInterface $entityManager;
 
-    public function __construct(RestaurantRepository $restaurantRepository, MenuRepository $menuRepository, PlatRepository $platRepository, CommandeRepository $commandeRepository, EntityManagerInterface $entityManager) {
+    public function __construct(RestaurantRepository $restaurantRepository, MenuRepository $menuRepository, PlatRepository $platRepository, CommandeRepository $commandeRepository, EntityManagerInterface $entityManager)
+    {
         $this->restaurantRepository = $restaurantRepository;
         $this->menuRepository = $menuRepository;
         $this->platRepository = $platRepository;
@@ -58,7 +59,7 @@ class RestaurantController extends AbstractController
     }
 
     #[Route('/create', name: 'restaurant_create')]
-    public function make(Request $request): Response | RedirectResponse
+    public function make(Request $request): Response|RedirectResponse
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $restaurant = new Restaurant();
@@ -115,8 +116,8 @@ class RestaurantController extends AbstractController
         return $this->redirectToRoute('restaurant_list');
     }
 
-    #[Route("/manage/{id}", name:"restaurant_manage")]
-    public function manageRestaurant(int $id): Response | RedirectResponse
+    #[Route("/manage/{id}", name: "restaurant_manage")]
+    public function manageRestaurant(int $id): Response|RedirectResponse
     {
         $restaurant = $this->restaurantRepository->find($id);
         if (!$restaurant || $restaurant->getUser() !== $this->getUser()) {
@@ -129,49 +130,49 @@ class RestaurantController extends AbstractController
     }
 
     #[Route('/{id}/manage/menus', name: 'restaurant_manage_menus')]
-    public function manageMenus(int $id, Request $request): Response | RedirectResponse
+    public function manageMenus(int $id, Request $request): Response|RedirectResponse
     {
         $restaurant = $this->restaurantRepository->find($id);
-    
+
         if ($restaurant === null) {
             throw $this->createNotFoundException('Restaurant not found');
         }
         if ($restaurant->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('restaurant_list');
         }
-    
+
         // Handle Menu creation
         $menu = new Menu();
         $menuForm = $this->createForm(MenuType::class, $menu);
         $menuForm->handleRequest($request);
-    
+
         if ($menuForm->isSubmitted() && $menuForm->isValid()) {
             $menu->setRestaurant($restaurant);
             $this->entityManager->persist($menu);
             $this->entityManager->flush();
-    
+
             return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurant->getId()]);
         }
-    
+
         // Handle Plat forms for each menu
         $menus = $this->menuRepository->findBy(['restaurant' => $restaurant]);
         $platForms = [];
-    
+
         foreach ($menus as $menu) {
             $plat = new Plat();
             $platForm = $this->createForm(PlatType::class, $plat);
             $platForm->handleRequest($request);
             $platForms[$menu->getId()] = $platForm->createView();
-    
+
             if ($platForm->isSubmitted() && $platForm->isValid() && $request->request->get('menu_id') == $menu->getId()) {
                 $plat->setMenu($menu);
                 $this->entityManager->persist($plat);
                 $this->entityManager->flush();
-    
+
                 return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurant->getId()]);
             }
         }
-    
+
         return $this->render('restaurant/manage_menus.html.twig', [
             'restaurant' => $restaurant,
             'menus' => $menus,
@@ -185,15 +186,15 @@ class RestaurantController extends AbstractController
         $restaurant = $this->restaurantRepository->find($restaurantId);
         $menu = $this->menuRepository->find($menuId);
         $plat = $this->platRepository->find($platId);
-        
+
         if (!$restaurant || !$menu || !$plat || $restaurant->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurantId]);
         }
-    
+
         $menu->removePlat($plat);
         $this->entityManager->remove($plat);
         $this->entityManager->flush();
-    
+
         return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurantId]);
     }
 
@@ -202,14 +203,14 @@ class RestaurantController extends AbstractController
     {
         $restaurant = $this->restaurantRepository->find($restaurantId);
         $menu = $this->menuRepository->find($menuId);
-    
+
         if (!$restaurant || !$menu || $restaurant->getUser() !== $this->getUser()) {
             return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurantId]);
         }
-    
+
         $this->entityManager->remove($menu);
         $this->entityManager->flush();
-    
+
         return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurantId]);
     }
 
@@ -237,8 +238,8 @@ class RestaurantController extends AbstractController
         ]);
     }
 
-    #[Route("/restaurant/{id}/manage/commandes", name:"restaurant_manage_commandes")]
-    public function showCommandes(int $id): Response | RedirectResponse
+    #[Route("/restaurant/{id}/manage/commandes", name: "restaurant_manage_commandes")]
+    public function showCommandes(int $id): Response|RedirectResponse
     {
         $restaurant = $this->restaurantRepository->find($id);
         if (!$restaurant || $restaurant->getUser() !== $this->getUser()) {
