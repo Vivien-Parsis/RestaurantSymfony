@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}500 - Server Error{% endblock %}
+
+{% block body %}
+    <h1>Server Error</h1>
+    <p>An unexpected error has occurred. Please try again later.</p>
+    <a href="{{ path('app_home') }}">Return to Homepage</a>
+{% endblock %}
