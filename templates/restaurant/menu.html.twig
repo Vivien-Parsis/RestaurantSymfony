@@ -3,12 +3,22 @@
 {% block title %}Menu pour {{ restaurant.nom }}{% endblock %}
 
 {% block body %}
+<div class="restaurant-container">
     <h1>Menu pour {{ restaurant.nom }}</h1>
 
     <h3>Menus:</h3>
-    {% for menu in menus %}
-        {% include 'menu/item.html.twig' with {'menu': menu} %}
+    {% if menus is empty %}
+        <p>Aucun menu disponible pour ce restaurant.</p>
     {% else %}
-        <p>Pas de menu disponible pour ce restaurant.</p>
-    {% endfor %}
+        <ul>
+            {% for menu in menus %}
+                <li class="menu-item">
+                <p>nom du menu : </p>
+                    {% include 'menu/item.html.twig' with {'menu': menu} %}
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{{ path('restaurant_list') }}" class="btn btn-secondary">Retour à la liste des restaurants</a>
+    {% endif %}
+</div>
 {% endblock %}

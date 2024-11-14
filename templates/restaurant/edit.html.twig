@@ -3,14 +3,24 @@
 {% block title %}Modifier le restaurant{% endblock %}
 
 {% block body %}
-    <h1>Modifier le restaurant: {{ restaurant.nom }}</h1>
+    <div class="restaurant-container">
+        <h1>Modifier le restaurant: {{ restaurant.nom }}</h1>
 
-    {{ form_start(form) }}
-        {{ form_row(form.nom) }}
-        {{ form_row(form.adresse) }}
-        {{ form_row(form.categorie) }}
-        <button type="submit">Enregistrer les modifications</button>
-    {{ form_end(form) }}
-    
-    <a href="{{ path('restaurant_list') }}">Retour à la liste des restaurants</a>
+        {{ form_start(form) }}
+            <div class="form-group">
+                {{ form_row(form.nom) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.adresse) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.categorie) }}
+            </div>
+            <button type="submit" class="btn btn-action">Enregistrer les modifications</button>
+        {{ form_end(form) }}
+
+        <div class="form-actions">
+            <a href="{{ path('restaurant_list') }}" class="btn btn-secondary">Retour à la liste des restaurants</a>
+        </div>
+    </div>
 {% endblock %}

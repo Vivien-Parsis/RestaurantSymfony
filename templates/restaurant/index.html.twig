@@ -3,33 +3,34 @@
 {% block title %}Restaurants{% endblock %}
 
 {% block body %}
-    <h1>Restaurants</h1>
+<div class="container">
+    <h1 class="title">Nos Restaurants</h1>
 
-    <ul>
+    <ul class="restaurant-list">
         {% for restaurant in restaurants %}
-            <li>
-                <strong>{{ restaurant.nom }}</strong><br>
-                <em>{{ restaurant.adresse }}</em><br>
-                <em>Category: {{ restaurant.categorie }}</em><br>
-                <a href="{{ path('user_start_command', { 'restaurantId': restaurant.id }) }}" class="btn btn-primary">
-                    <button>Commander</button>
-                </a>
-                <a href="{{ path('restaurant_menu', {'id': restaurant.id}) }}">
-                    <button>Voir menu</button>
-                </a>
+            <li class="restaurant-item">
+                <div class="restaurant-info">
+                    <h3 class="restaurant-name">{{ restaurant.nom }}</h3>
+                    <p class="restaurant-address">{{ restaurant.adresse }}</p>
+                    <p class="restaurant-category">Catégorie: <strong>{{ restaurant.categorie }}</strong></p>
+                </div>
+                
+                <div class="restaurant-actions">
+                    <a href="{{ path('user_start_command', { 'restaurantId': restaurant.id }) }}" class="btn btn-order">Commander</a>
+                    <a href="{{ path('restaurant_menu', {'id': restaurant.id}) }}" class="btn btn-view">Voir le menu</a>
 
-                {% if app.user is not null and restaurant.user == app.user %}
-                    <a href="{{ path('restaurant_manage', {'id': restaurant.id}) }}">
-                        <button>Gérer le restaurant</button>
-                    </a>
-                {% endif %}
+                    {% if app.user is not null and restaurant.user == app.user %}
+                        <a href="{{ path('restaurant_manage', {'id': restaurant.id}) }}" class="btn btn-manage">Gérer le restaurant</a>
+                    {% endif %}
+                </div>
             </li>
         {% endfor %}
     </ul>
 
     {% if app.user and app.user.restaurant is null %}
-        <a href="{{ path('restaurant_create') }}">
-            <button>Créer un restaurant</button>
-        </a>
+        <div class="create-restaurant">
+            <a href="{{ path('restaurant_create') }}" class="btn btn-create">Créer un restaurant</a>
+        </div>
     {% endif %}
+</div>
 {% endblock %}

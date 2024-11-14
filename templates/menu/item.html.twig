@@ -1,15 +1,19 @@
-<h4>{{ menu.name }}</h4>
-<ul>
-    {% for plat in menu.plats %}
-        <li>
-            <strong>{{ plat.nom }}</strong><br>
-            <em>Categorie: {{ plat.categorie }}</em><br>
-            <em>Ingredients: {{ plat.ingredients }}</em><br>
-            <strong>Price: {{ plat.prix }}€</strong>
-        </li>
-    {% endfor %}
-</ul>
+<div class="menu-item">
+    <h4 class="menu-title">{{ menu.name }}</h4>
 
-{% if menu.plats is empty %}
-    <p>Aucun plat disponible pour ce menu.</p>
-{% endif %}
+    {% if menu.plats is empty %}
+        <p class="no-plats">Aucun plat disponible pour ce menu.</p>
+    {% else %}
+        <ul class="menu-plats">
+            {% for plat in menu.plats %}
+                <li class="plat-item">
+                    <strong>{{ plat.nom }}</strong><br>
+                    <em>Categorie: {{ plat.categorie }}</em><br>
+                    <em>Ingredients: {{ plat.ingredients }}</em><br>
+                    <strong>Prix: {{ plat.prix }}€</strong>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+

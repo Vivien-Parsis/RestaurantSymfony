@@ -3,24 +3,30 @@
 {% block title %}Gestion de Restaurant - {{ restaurant.nom }}{% endblock %}
 
 {% block body %}
-    <h1>Gérer le restaurant: {{ restaurant.nom }}</h1>
+<div class="container">
+    <h1 class="title">Gérer le restaurant: {{ restaurant.nom }}</h1>
 
-    <h3>Informations du restaurant:</h3>
-    <p><strong>Nom:</strong> {{ restaurant.nom }}</p>
-    <p><strong>Adresse:</strong> {{ restaurant.adresse }}</p>
-    <p><strong>Catégorie:</strong> {{ restaurant.categorie }}</p>
+    <div class="info-section">
+        <h3>Informations du restaurant:</h3>
+        <p><strong>Nom:</strong> {{ restaurant.nom }}</p>
+        <p><strong>Adresse:</strong> {{ restaurant.adresse }}</p>
+        <p><strong>Catégorie:</strong> {{ restaurant.categorie }}</p>
+    </div>
 
-    <h3>Actions disponibles:</h3>   
-    <ul>
-        <li><a href="{{ path('restaurant_manage_menus', {'id': restaurant.id}) }}">Gérer les menus</a></li>
-        <li><a href="{{ path('restaurant_manage_commandes', {'id': restaurant.id}) }}">Voir les commandes</a></li>
-        <li><a href="{{ path('restaurant_edit', {'id': restaurant.id}) }}">Modifier le restaurant</a></li>
-        
-        <li>
-            <form method="post" action="{{ path('restaurant_delete', {'id': restaurant.id}) }}" style="display:inline;">
-                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ restaurant.id) }}">
-                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce restaurant ?');">Supprimer le restaurant</button>
-            </form>
-        </li>
-    </ul>
+    <div class="action-section">
+        <h3>Actions disponibles:</h3>
+        <ul class="action-list">
+            <li><a href="{{ path('restaurant_manage_menus', {'id': restaurant.id}) }}" class="btn">Gérer les menus</a></li>
+            <li><a href="{{ path('restaurant_manage_commandes', {'id': restaurant.id}) }}" class="btn">Voir les commandes</a></li>
+            <li><a href="{{ path('restaurant_edit', {'id': restaurant.id}) }}" class="btn">Modifier le restaurant</a></li>
+            <li>
+                <form method="post" action="{{ path('restaurant_delete', {'id': restaurant.id}) }}" style="display:inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ restaurant.id) }}">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce restaurant ?');">Supprimer le restaurant</button>
+                </form>
+            </li>
+        </ul>
+        <a href="{{ path('restaurant_list') }}" class="btn btn-secondary">Retour à la liste des restaurants</a>
+    </div>
+</div>
 {% endblock %}
