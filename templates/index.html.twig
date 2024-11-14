@@ -9,5 +9,9 @@
         <a href="{{ path('restaurant_list')}}">
             <button>Voir les restaurants</button>
         </a>
+    {% else %}
+        <a href="{{ path('app_login') }}">
+            <button>Se connecter</button>
+        </a>
     {% endif %}
 {% endblock %}
