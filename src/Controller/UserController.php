@@ -98,7 +98,7 @@ class UserController extends AbstractController
             'restaurant' => $restaurant,
             'menus' => $menus,
             'plats' => $plats,
-            'currentCommand' => $session->get('command'),
+            'commandeActuelle' => $session->get('command'),
         ]);
     }
 
