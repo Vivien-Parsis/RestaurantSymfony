@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Commande;
 use App\Entity\Restaurant;
+use App\Form\UserProfileType;
 use App\Repository\PlatRepository;
 use App\Repository\MenuRepository;
 use App\Repository\CommandeRepository;
@@ -25,11 +26,25 @@ class UserController extends AbstractController
     }
 
     #[Route('/', name: 'user_profile')]
-    public function profile(): Response
+    public function profile(Request $request): Response
     {
         $user = $this->getUser();
+
+        // Create and handle the form
+        $form = $this->createForm(UserProfileType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Your profile has been updated.');
+            return $this->redirectToRoute('user_profile');
+        }
+
         return $this->render('user/profile.html.twig', [
             'user' => $user,
+            'profileForm' => $form->createView(),
         ]);
     }
 
