@@ -155,7 +155,7 @@ class UserController extends AbstractController
         $commande = new Commande();
         $commande->setRestaurant($restaurant);
         $commande->setClient($this->getUser());
-
+        $commande->setDateDeCommande(new \DateTime());
         $platsIds = $request->get('plats', []);
 
         foreach ($platsIds as $platId) {

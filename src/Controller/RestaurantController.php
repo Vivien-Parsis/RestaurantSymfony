@@ -246,7 +246,7 @@ class RestaurantController extends AbstractController
             $this->denyAccessUnlessGranted('ROLE_USER');
             return $this->redirectToRoute('restaurant_list');
         }
-        $commandes = $this->commandeRepository->findBy(['Restaurant' => $restaurant]);
+        $commandes = $this->commandeRepository->findBy(['restaurant' => $restaurant]);
 
         return $this->render('restaurant/manage_commandes.html.twig', [
             'restaurant' => $restaurant,

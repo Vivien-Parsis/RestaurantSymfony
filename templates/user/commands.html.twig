@@ -12,6 +12,7 @@
             {% for command in commands %}
                 <li>
                     <p><strong>Restaurant:</strong> {{ command.restaurant.nom }}</p>
+                    <p><strong>Date de Commande:</strong> {{ command.DateDeCommande|date('d/m/Y H:i') }}</p>
                     <p><strong>Plats:</strong> 
                         <ul>
                             {% for plat in command.plats %}

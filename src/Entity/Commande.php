@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CommandeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
@@ -28,6 +29,9 @@ class Commande
     #[ORM\ManyToMany(targetEntity: Plat::class, inversedBy: 'commandes', cascade: ['persist'], fetch: 'EAGER')]
     private Collection $plats;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $DateDeCommande = null;
+
     public function __construct()
     {
         $this->plats = new ArrayCollection();
@@ -38,14 +42,14 @@ class Commande
         return $this->id;
     }
 
-    public function getRestaurant(): ?restaurant
+    public function getRestaurant(): ?Restaurant
     {
         return $this->restaurant;
     }
 
-    public function setRestaurant(?restaurant $Restaurant): static
+    public function setRestaurant(?Restaurant $restaurant): static
     {
-        $this->restaurant = $Restaurant;
+        $this->restaurant = $restaurant;
 
         return $this;
     }
@@ -82,6 +86,18 @@ class Commande
     public function removePlat(Plat $plat): static
     {
         $this->plats->removeElement($plat);
+
+        return $this;
+    }
+
+    public function getDateDeCommande(): ?\DateTimeInterface
+    {
+        return $this->DateDeCommande;
+    }
+
+    public function setDateDeCommande(\DateTimeInterface $DateDeCommande): static
+    {
+        $this->DateDeCommande = $DateDeCommande;
 
         return $this;
     }

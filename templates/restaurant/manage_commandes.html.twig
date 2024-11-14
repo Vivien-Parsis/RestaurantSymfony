@@ -15,7 +15,7 @@
                     <li>
                         <strong>Commande #{{ commande.id }}</strong><br>
                         <em>Client: {{ commande.client.nom }} {{ commande.client.prenom }}</em><br>
-                        <em>Date: {{ commande.createdAt|date('d/m/Y H:i') }}</em><br>
+                        <strong>Date de Commande:</strong> {{ commande.DateDeCommande|date('d/m/Y H:i') }}<br>
                         <strong>Plats:</strong>
                         <ul>
                             {% for plat in commande.plats %}
