@@ -38,7 +38,7 @@ class Restaurant
 
     #[ORM\OneToOne(inversedBy: 'restaurant', cascade: ['persist'], fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    private ?User $restaurateur = null;
+    private ?User $user = null;
 
     
 
@@ -150,14 +150,14 @@ class Restaurant
         return $this;
     }
 
-    public function getRestaurateur(): ?User
+    public function getUser(): ?User
     {
-        return $this->restaurateur;
+        return $this->user;
     }
 
-    public function setRestaurateur(?User $restaurateur): static
+    public function setUser(?User $user): static
     {
-        $this->restaurateur = $restaurateur;
+        $this->user = $user;
 
         return $this;
     }
