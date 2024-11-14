@@ -1,20 +1,29 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>
-			{% block title %}Welcome!
-			{% endblock %}
-		</title>
-		{% block stylesheets %}{% endblock %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Application de restauration{% endblock %}</title>
 
-		{% block javascripts %}
-			{% block importmap %}
-				{{ importmap('app') }}
-			{% endblock %}
-		{% endblock %}
-	</head>
-	<body>
-		{% block body %}{% endblock %}
-	</body>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    {% endblock %}
+</head>
+<nav>
+	<ul>
+		<li><a href="{{path('app_home')}}">Acceuil</a></li>
+		<li><a href="{{path('app_login')}}">Login</a></li>
+		<li><a href="{{path('app_register')}}">Register</a></li>
+	</ul>
+</nav>
+<body>
+    {% block body %}{% endblock %}
+    {% block footer %}
+	<footer>
+		<div class="footer-content">
+			<p>&copy; 2023 Application de restauration. Tous droits réservés.</p>
+		</div>
+	</footer>
+{% endblock %}
+</body>
 </html>

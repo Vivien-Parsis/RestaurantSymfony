@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block body %}
+<div>
 	<h1>Register</h1>
 
 	{{ form_errors(registrationForm) }}
@@ -35,4 +36,5 @@
 		Déjà inscrit ?
 		<a href="{{ path('app_login')}}">Me connecter</a>
 	</p>
+</div>
 {% endblock %}

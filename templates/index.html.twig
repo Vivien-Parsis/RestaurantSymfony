@@ -2,12 +2,43 @@
 
 {% block body %}
     <h1>Application de restauration</h1>
-    {% if is_granted('ROLE_USER') %}
-        <a href="{{ path('user_profile') }}">
-            <button>Voir votre profile</button>
-        </a>
-        <a href="{{ path('restaurant_list')}}">
-            <button>Voir les restaurants</button>
-        </a>
-    {% endif %}
+    
+    <div class="welcome-section">
+        <p>Bienvenue sur notre application de restauration, votre guide ultime pour découvrir des plats et déguster de nouvelles choses !
+         Que vous soyez à la recherche d'un nouvel endroit où dîner, ou que vous souhaitiez commander directement chez vous, nous sommes là pour vous aider.</p>
+        <br>
+        <p>Nous sommes une application de type Deliveroo et Uber Eat. Ainsi vous ne serez pas dépaysé par notre fonctionnement utilisateurs. 
+        Nous souhaitons vous apporter une meilleure vision des choses sur la restauration.
+        </p>
+    </div>
+    
+    <div class="actions-section">
+        {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('user_profile') }}">
+                <button>Voir votre profil</button>
+            </a>
+            <a href="{{ path('restaurant_list') }}">
+                <button>Voir les restaurants</button>
+            </a>
+        {% else %}
+            <p>Pour accéder à toutes les fonctionnalités de notre application, veuillez vous connecter ou créer un compte.</p>
+            <a href="{{ path('app_login') }}">
+                <button>Se connecter</button>
+            </a>
+            <a href="{{ path('app_register') }}">
+                <button>S'inscrire</button>
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="feature-section">
+        <h2>Fonctionnalités principales</h2>
+        <ul>
+            <li>Découvrez des restaurants proches de chez vous ou partout dans le monde.</li>
+            <li>Consultez les avis et notes des autres utilisateurs pour faire votre choix.</li>
+            <li>Ajoutez des restaurants à vos favoris pour les retrouver facilement.</li>
+            <li>Accédez à votre profil pour gérer vos informations et préférences.</li>
+        </ul>
+    </div>
 {% endblock %}
+
