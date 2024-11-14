@@ -11,27 +11,27 @@
         <p><strong>Categorie:</strong> {{ restaurant.categorie }}</p>
     </div>
     
-    <div class="current-command">
-        <h3>Current Command:</h3>
+    <div class="commande-actuelle">
+        <h3>Commande Actuelle:</h3>
         <ul>
-            {% set totalPrice = 0 %}
-            {% for plat in currentCommand %}
+            {% set prixTotal = 0 %}
+            {% for plat in commandeActuelle %}
                 <li> 
                     {{ plat.nom }} - {{ plat.prix }} €
-                    <a href="{{ path('user_remove_from_command', { 'platId': plat.id, 'restaurantId': restaurant.id }) }}">Remove</a>
+                    <a href="{{ path('user_remove_from_command', { 'platId': plat.id, 'restaurantId': restaurant.id }) }}">Supprimer</a>
                 </li>
-                {% set totalPrice = totalPrice + plat.prix %}
+                {% set prixTotal = prixTotal + plat.prix %}
             {% else %}
-                <p>No items in your current command yet.</p>
+                <p>Vous n'avez rien dans votre commande.</p>
             {% endfor %}
         </ul>
 
-        <h4>Total Price: {{ totalPrice }} €</h4>
+        <h4>Prix Total: {{ prixTotal }} €</h4>
 
         <form action="{{ path('user_submit_command', { 'restaurantId': restaurant.id }) }}" method="POST">
-            <button type="submit">Submit Command</button>
+            <button type="submit">Soumettre la Commande</button>
         </form>
-        <a href="{{ path('user_reset_command', { 'restaurantId': restaurant.id }) }}">Reset Command</a>
+        <a href="{{ path('user_reset_command', { 'restaurantId': restaurant.id }) }}">Réinitialisation de la Commande</a>
     </div>
 
     <div class="menus">
@@ -42,11 +42,11 @@
                     <li>
                         <strong>{{ plat.nom }}</strong><br>
                         <em>Ingredients: {{ plat.ingredients }}</em><br>
-                        <strong>Category: </strong>{{ plat.categorie }}<br>
-                        <strong>Price: </strong>{{ plat.prix }} €<br>
+                        <strong>Categorie: </strong>{{ plat.categorie }}<br>
+                        <strong>Prix: </strong>{{ plat.prix }} €<br>
                         
                         <form action="{{ path('user_add_to_command', { 'platId': plat.id }) }}" method="POST">
-                            <button type="submit">Add to Command</button>
+                            <button type="submit">Ajouter à la Commande</button>
                         </form>
                     </li>
                 {% endfor %}

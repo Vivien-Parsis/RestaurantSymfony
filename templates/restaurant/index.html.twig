@@ -8,6 +8,7 @@
 
     <ul class="restaurant-list">
         {% for restaurant in restaurants %}
+<<<<<<< HEAD
             <li class="restaurant-item">
                 <div class="restaurant-info">
                     <h3 class="restaurant-name">{{ restaurant.nom }}</h3>
@@ -18,6 +19,23 @@
                 <div class="restaurant-actions">
                     <a href="{{ path('user_start_command', { 'restaurantId': restaurant.id }) }}" class="btn btn-order">Commander</a>
                     <a href="{{ path('restaurant_menu', {'id': restaurant.id}) }}" class="btn btn-view">Voir le menu</a>
+=======
+            <li>
+                <strong>{{ restaurant.nom }}</strong><br>
+                <em>{{ restaurant.adresse }}</em><br>
+                <em>Category: {{ restaurant.categorie }}</em><br>
+
+                {% if restaurant.menus|length > 0 %}
+                    <a href="{{ path('user_start_command', { 'restaurantId': restaurant.id }) }}" class="btn btn-primary">
+                        <button>Commander</button>
+                    </a>
+                    <a href="{{ path('restaurant_menu', {'id': restaurant.id}) }}">
+                        <button>Voir menu</button>
+                    </a>
+                {% else %}
+                    <p>Pas de menus disponible pour ce restaurant</p>
+                {% endif %}
+>>>>>>> e4b8673a716f9434dc54469e614d0b17bcf5c170
 
                     {% if app.user is not null and restaurant.user == app.user %}
                         <a href="{{ path('restaurant_manage', {'id': restaurant.id}) }}" class="btn btn-manage">Gérer le restaurant</a>

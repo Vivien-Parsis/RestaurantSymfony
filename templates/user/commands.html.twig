@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Your Commands{% endblock %}
+{% block title %}Votre Commande{% endblock %}
 
 {% block body %}
-    <h1>Your Commands</h1>
+    <h1>Votre Commande</h1>
 
     {% if commands is empty %}
-        <p>You have no commands.</p>
+        <p>Vous n'avez aucune commandes.</p>
     {% else %}
         <ul>
             {% for command in commands %}
@@ -19,8 +19,8 @@
                             {% endfor %}
                         </ul>
                     </p>
-                    <form method="post" action="{{ path('user_command_delete', { 'id': command.id }) }}" onsubmit="return confirm('Are you sure you want to delete this command?');">
-                        <button type="submit">Delete</button>
+                    <form method="post" action="{{ path('user_command_delete', { 'id': command.id }) }}" onsubmit="return confirm('Etes-vous sur de vouloir supprimer cette commande?');">
+                        <button type="submit">Supprimer</button>
                     </form>
                     <a href="{{ path('user_command_edit', { 'id': command.id }) }}">Edit</a>
                 </li>

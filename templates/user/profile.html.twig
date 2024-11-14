@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Profile</h1>
 
-    <p><strong>Name:</strong> {{ user.nom }} {{ user.prenom }}</p>
+    <p><strong>Nom:</strong> {{ user.nom }} {{ user.prenom }}</p>
     <p><strong>Email:</strong> {{ user.email }}</p>
     <p><strong>Addresse:</strong> {{ user.addresse }}</p>
 
@@ -14,4 +14,29 @@
     {% endif %}
 
     <p><a href="{{ path('user_commands') }}" class="btn btn-primary">Voir vos commandes</a></p>
+
+    <h2>Modifier vos informations</h2>
+    <button id="toggle-form-button" class="btn btn-secondary">Modifier le profil</button>
+
+    <div id="profile-form-container" style="display: none;">
+        {{ form_start(profileForm) }}
+            {{ form_row(profileForm.nom) }}
+            {{ form_row(profileForm.prenom) }}
+            {{ form_row(profileForm.addresse) }}
+            <button type="submit" class="btn btn-success">Mettre à jour</button>
+        {{ form_end(profileForm) }}
+    </div>
+
+    <script>
+        document.getElementById('toggle-form-button').addEventListener('click', function () {
+            const formContainer = document.getElementById('profile-form-container');
+            if (formContainer.style.display === 'none') {
+                formContainer.style.display = 'block';
+                this.textContent = 'Annuler';
+            } else {
+                formContainer.style.display = 'none';
+                this.textContent = 'Modifier le profil';
+            }
+        });
+    </script>
 {% endblock %}
