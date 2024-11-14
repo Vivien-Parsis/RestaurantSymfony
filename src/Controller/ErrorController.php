@@ -9,10 +9,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ErrorController extends AbstractController
 {
-    public function show404(): Response
+    public function show(\Throwable $exception): Response
     {
-        return $this->render('error/404.html.twig', [
-            'message' => 'The page you are looking for could not be found.',
+        if ($exception instanceof NotFoundHttpException) {
+            $template = 'error/404.html.twig';
+            $message = 'The page you are looking for could not be found.';
+        } else {
+            $template = 'error/500.html.twig';
+            $message = 'An unexpected error has occurred. Please try again later.';
+        }
+
+        return $this->render($template, [
+            'message' => $message,
         ]);
     }
 }
