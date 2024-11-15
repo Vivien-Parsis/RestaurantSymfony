@@ -141,7 +141,6 @@ class RestaurantController extends AbstractController
             return $this->redirectToRoute('restaurant_list');
         }
 
-        // Handle Menu creation
         $menu = new Menu();
         $menuForm = $this->createForm(MenuType::class, $menu);
         $menuForm->handleRequest($request);
@@ -154,7 +153,6 @@ class RestaurantController extends AbstractController
             return $this->redirectToRoute('restaurant_manage_menus', ['id' => $restaurant->getId()]);
         }
 
-        // Handle Plat forms for each menu
         $menus = $this->menuRepository->findBy(['restaurant' => $restaurant]);
         $platForms = [];
 

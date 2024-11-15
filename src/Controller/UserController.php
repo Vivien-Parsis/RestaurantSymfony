@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Plat;
 use App\Entity\Commande;
 use App\Entity\Restaurant;
@@ -33,7 +32,6 @@ class UserController extends AbstractController
     {
         $user = $this->getUser();
 
-        // Create and handle the form
         $form = $this->createForm(UserProfileType::class, $user);
         $form->handleRequest($request);
 
